@@ -20,6 +20,16 @@
     opacity: 0.5;
   }
 }
+.icon + .title,
+.title + .icon {
+  margin-left: 8px;
+}
+
+.icon {
+  display: inline-block;
+  width: 24px;
+  text-align: center;
+}
 
 .rounded {
   border-radius: 999px;
@@ -30,6 +40,12 @@
     border-color: rgba(22, 24, 35, 0.2);
     background-color: rgba(22, 24, 35, 0.03);
   }
+}
+
+.square {
+  height: 36px;
+  border: 1px solid rgba(22, 24, 35, 0.12);
+  border-radius: 2px;
 }
 
 .primary {

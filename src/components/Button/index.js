@@ -11,13 +11,19 @@ function Button({
   small = false,
   large = false,
   rounded = false,
+  square = false,
   href,
+  leftIcon,
+  rightIcon,
   className,
   children,
+
   onClick,
+
   ...passprops
 }) {
   let Comp = 'button';
+
   const props = {
     onClick,
     ...passprops,
@@ -44,11 +50,14 @@ function Button({
     text,
     disabled,
     rounded,
+    square,
     [className]: className,
   });
   return (
     <Comp className={classes} {...props}>
-      {children}
+      {leftIcon && <span className={cx('icon')}>{leftIcon}</span>}
+      <span className={cx('title')}>{children}</span>
+      {rightIcon && <span className={cx('icon')}>{rightIcon}</span>}
     </Comp>
   );
 }

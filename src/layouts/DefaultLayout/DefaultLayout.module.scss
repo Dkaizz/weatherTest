@@ -8,8 +8,9 @@
   width: var(--default-layout-width, 1150px);
   background-color: #999;
   display: flex;
-  min-height: 500px;
+  min-height: 1500px;
   padding: 0 24px;
+  margin-top: var(--default-layout-header-height, 60px);
 }
 
 .content {

@@ -5,13 +5,13 @@ import { Wrapper as PopperWrapper } from '~/components/Popper';
 import MenuItem from './MenuItem';
 import Header from './Header';
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 
 const cx = classNames.bind(styles);
 const defaultFc = () => {};
-function Menu({ children, items, onChange = defaultFc }) {
+function Menu({ children, items = [], onChange = defaultFc, hideOnClick = false }) {
   const [dataMenu, setDataMenu] = useState([{ data: items }]);
   let menu = dataMenu[dataMenu.length - 1];
-  console.log('menu', menu);
   function RenderItem() {
     return menu.data.map((item, index) => {
       const isparent = !!item.children;
@@ -23,7 +23,6 @@ function Menu({ children, items, onChange = defaultFc }) {
             if (isparent) {
               setDataMenu(pre => [...pre, item.children]);
             } else {
-              console.log(onChange);
               onChange(item);
             }
           }}
@@ -37,6 +36,7 @@ function Menu({ children, items, onChange = defaultFc }) {
       offset={[12, 10]}
       placement="bottom-end"
       delay={[0, 700]}
+      hideOnClick={hideOnClick}
       render={attrs => {
         return (
           <div className={cx('menu_list')} tabIndex="-1" {...attrs}>
@@ -49,7 +49,7 @@ function Menu({ children, items, onChange = defaultFc }) {
                   }}
                 />
               )}
-              {RenderItem()}
+              <div className={cx('menu_body')}>{RenderItem()}</div>
             </PopperWrapper>
           </div>
         );
@@ -62,5 +62,12 @@ function Menu({ children, items, onChange = defaultFc }) {
     </Tippy>
   );
 }
+
+Menu.propTypes = {
+  children: PropTypes.node,
+  items: PropTypes.array,
+  onChange: PropTypes.func,
+  hideOnClick: PropTypes.bool,
+};
 
 export default Menu;

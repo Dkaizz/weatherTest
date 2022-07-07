@@ -1,18 +1,18 @@
 import { useEffect, useRef, useState } from 'react';
 import { Button, Card, Container } from 'react-bootstrap';
 import { search } from './apiServices/weatherServes';
-import { useAsciiSlug, useNameDay } from './hooks';
+import { useAsciiSlug } from './hooks';
 import styled, { keyframes } from 'styled-components';
 import './App.scss';
+import moment from 'moment';
+import CardItem from './components/CardItem/CardItem';
 
 function App() {
   const inputRef = useRef();
-  const [valueinput, setValueInput] = useState('');
+  const [valueInput, setValueInput] = useState('');
   const [searchResult, setSearchResult] = useState({});
 
   const asciiSlug = useAsciiSlug;
-
-  const fcDay = useNameDay;
 
   const show = keyframes`
   from {
@@ -57,35 +57,24 @@ function App() {
     margin-right: 10px;
   `;
 
-  const CardImg = styled(Card.Img)`
-    border-bottom: 1px solid #ccc;
-  `;
-
   useEffect(() => {
-    console.log('useEffect');
     const app = async () => {
-      const input = asciiSlug(valueinput);
+      const input = asciiSlug(valueInput);
       console.log('valueSearchinput:', input);
 
       const result = await search(input);
       setSearchResult(result);
     };
-    if (valueinput.trim().length > 0) {
-      app();
-    } else {
-      setSearchResult({});
-    }
+    valueInput.trim().length > 0 ? app() : setSearchResult({});
 
     return () => {
       // cleanup
     };
-  }, [valueinput]);
+  }, [valueInput]);
 
   const handleSearch = () => {
-    console.log('onclick');
     const valueSearch = inputRef.current.value;
 
-    console.log('valueSearch:', valueSearch);
     setSearchResult({});
 
     setValueInput(valueSearch);
@@ -93,36 +82,13 @@ function App() {
 
   function renderResultSearch() {
     if (Object.keys(searchResult).length > 0) {
-      console.log('searchResult:', searchResult);
       const data = searchResult.forecast.forecastday;
       return data.map((item, index) => {
-        const day = fcDay(item.date);
-        return (
-          <div className="col" key={index}>
-            <Card>
-              <CardImg variant="top" src={item.day.condition.icon} />
-              <Card.Body>
-                <Card.Title>
-                  {searchResult.location.name}/{searchResult.location.country}
-                </Card.Title>
-                <p>
-                  {day} / {item.date}
-                </p>
-                <p> {item.day.condition.text}</p>
-                <p>
-                  Max Temp: <span className="maxtemp">{item.day.maxtemp_c}*C</span>
-                </p>
-                <p>
-                  Min Temp: <span className="mintemp">{item.day.mintemp_c}*C</span>
-                </p>
-              </Card.Body>
-            </Card>
-          </div>
-        );
+        const day = moment(item.date).format('dddd');
+        return <CardItem key={index} day={day} item={item} resultSearch={searchResult} />;
       });
     }
   }
-  console.log('render');
   return (
     <DivContainer>
       <DivInput>
